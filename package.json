@@ -1,0 +1,25 @@
+{
+  "name": "gbook",
+  "version": "1.0.0",
+  "description": "simple routine to get books",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/halfbeep/gbook.git"
+  },
+  "keywords": [
+    "Books",
+    "Google",
+    "Rating",
+    "Search"
+  ],
+  "author": "Shaun Cains",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/halfbeep/gbook/issues"
+  },
+  "homepage": "https://github.com/halfbeep/gbook#readme"
+}
