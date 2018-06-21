@@ -1,2 +1,3 @@
 # gbook
-simple routine to get books
+work in progress...
+routine to get books
