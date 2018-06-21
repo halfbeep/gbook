@@ -1,16 +1,42 @@
 const https = require('https')
 
-    const titleDescp = 'astrology';
+const titleDescp = 'astrology';
 
-    let bookCount = 0;
+let bookCount = 0;
 
-    let options = {
-        hostname: 'www.googleapis.com',
-        port: 443,
-        path: '/books/v1/volumes?q=' + titleDescp + '&startIndex=' + bookCount,
-        method: 'GET'
+let options = {
+    hostname: 'www.googleapis.com',
+    port: 443,
+    path: '/books/v1/volumes?q=' + titleDescp + '&startIndex=' + bookCount,
+    method: 'GET'
+}
+
+// pseudo code to integrate and test with working code below
+function getAllBookPages(callback, page) {
+    page = page || 1;
+    https.request.get(options,
+        success: function (data) {
+            if (data.is_last_page) {
+                // We are at the end so we call the callback
+                callback(page);
+            } else {
+                // We are not at the end so we recurse
+                get_all_pages(callback, page + 1);
+            }
+        }
     }
+}
 
+function show_page_count(data) {
+    console.log(data);
+}
+
+getAllBookPages(show_page_count);
+
+
+///// ******************
+
+// work in progress below
 
     const callback = function (resObjServer) {
 
@@ -60,7 +86,7 @@ const https = require('https')
 
                     console.log('Title: ' + parsedData['items'][i].volumeInfo.title)
                     console.log('UID  : ' + parsedData['items'][i].id  + ' AverageRating:  '  + parsedData['items'][i].volumeInfo.averageRating + '\n')
- 
+
                 }
 
                 console.log('Book count ' + bookCount)
@@ -73,9 +99,6 @@ const https = require('https')
             }
         })
 
-        console.log(options)
-        reqObjServer = https.request(options, callback)
-        reqObjServer.end()
     }
 
     let reqObjServer = https.request(options, callback)
