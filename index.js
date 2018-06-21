@@ -60,14 +60,16 @@ const https = require('https')
 
 
             } catch (e) {
+
             console.error(e.message)
+
             }
         })
     }
 
     var reqObjServer = https.request(options, callback)
-    reqObjServer.setHeader('user-agent', 'git foo blah')
+    reqObjServer.setHeader('user-agent', 'rapto foo blah')
     reqObjServer.setHeader('accept','application/json')
     reqObjServer.end()
 
-console.log('Gbook Thing Started ')
+console.log('Gbook Rapto Started ')
