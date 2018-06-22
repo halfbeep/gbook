@@ -1,6 +1,12 @@
 const https = require('https')
 
-const descp = 'astrology';
+const descp = 'witchcraft';
+
+const cheapest5 = new Array(5);
+
+let cheapCount = 0;
+
+const topRated10 = new Array(10);
 
 let options = {
     hostname: 'www.googleapis.com',
@@ -11,7 +17,6 @@ let options = {
 
 getBooksAndReview(runGbook, null, descp);
 
-// pseudo code to test with sort, extract & formatting code below
 function getBooksAndReview(callback, bookCount, title) {
 
     bkCount = bookCount || 0;
@@ -24,7 +29,7 @@ function getBooksAndReview(callback, bookCount, title) {
 
             const {statusCode} = responseObjServer;
 
-            if (statusCode === 200) {
+            if (bkCount < 100) {
 
                 let rawData = '';
 
@@ -40,30 +45,40 @@ function getBooksAndReview(callback, bookCount, title) {
 
                         const parsedData = JSON.parse(rawData);
 
-                        const booksFound = parsedData['items'].length;
+                        const booksFound = parsedData['items'];
 
-                        for (let b = 0; b < booksFound; b++) {
+                        for (let b = 0; b < booksFound.length; b++) {
 
-                            /*
-                            if(compareCostPerPage(cheapest5[0], booksFound[b]) >= 0) {
+                            if (booksFound[b].saleInfo.saleability !== 'NOT_FOR_SALE') {
 
-                                // requires type checking see ReadMe
-                                cheapest5[0] = booksFound[b];
 
-                                cheapest5.sort(compareCostPerPage);
+                                if (cheapCount < 5) {
+
+                                    cheapest5[cheapCount] = booksFound[b];
+
+                                    cheapCount = cheapCount + 1
+
+                                } else {
+
+                                    if (compareCostPerPage(cheapest5[0], booksFound[b]) >= 0) {
+
+                                        cheapest5[0] = booksFound[b];
+
+                                    }
+
+                                    cheapest5.sort(compareCostPerPage);
+
+                                }
 
                             }
-                            */ //
-
-                            let individualBookCount = bkCount + b;
-
+                            /* output check
+                            let individualBookCount = bkCount + b + 1;
                             console.log('Bk nr: ' + individualBookCount)
-
-                            console.log('Title: ' + parsedData['items'][b].volumeInfo.title)
-
-                            // console.log('UID  : ' + parsedData['items'][b].id + ' AverageRating:  ' + parsedData['items'][b].volumeInfo.averageRating + '\n')
+                            console.log('Title: ' + booksFound[b].volumeInfo.title)
+                            console.log('UID  : ' + parsedData['items'][b].id + ' AverageRating:  ' + parsedData['items'][b].volumeInfo.averageRating + '\n')
+                            */
                         }
-                        bkCount += booksFound;
+                        bkCount += booksFound.length;
 
                     } catch (e) {
 
@@ -85,20 +100,21 @@ function getBooksAndReview(callback, bookCount, title) {
 
 }
 
-// first call back
+// call back
 function runGbook(data) {
 
+    console.log('Total books comapred ' + data);
 
-    data--;
+    console.log('5 Cheapest per Page ');
 
-    console.log('Total books found ' + data);
+    console.log(cheapest5.map(book => {
 
-    // TODO; here dump print both arrays here with format as suggested
+        return '{   title: <' + book.volumeInfo.title + '>,' +
+            'costPerPage: <' + cpp(book) + '> }'
 
+    }));
 
 }
-
-
 
 
 
@@ -113,11 +129,10 @@ function compareCostPerPage (a, b) {
     return 0;
 }
 
-// undefined check
 function cpp(book) {
-    //   if (book && book.saleInfo.listPrice.amount && book.volumeInfo.pageCount)
-    //      return book.saleInfo.listPrice.amount / book.volumeInfo.pageCount;
-    return Number.MAX_SAFE_INTEGER
+    if (book.saleInfo.saleability === 'FREE')
+        return 0;
+    return book.saleInfo.listPrice.amount / book.volumeInfo.pageCount;
 }
 
 function compareRating(a, b) {
