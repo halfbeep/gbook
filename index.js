@@ -51,7 +51,6 @@ function getBooksAndReview(callback, bookCount, title) {
 
                             if (booksFound[b].saleInfo.saleability !== 'NOT_FOR_SALE') {
 
-
                                 if (cheapCount < 5) {
 
                                     cheapest5[cheapCount] = booksFound[b];
@@ -71,10 +70,13 @@ function getBooksAndReview(callback, bookCount, title) {
                                 }
 
                             }
-                            /* output check
+                            /*
                             let individualBookCount = bkCount + b + 1;
+
                             console.log('Bk nr: ' + individualBookCount)
+
                             console.log('Title: ' + booksFound[b].volumeInfo.title)
+
                             console.log('UID  : ' + parsedData['items'][b].id + ' AverageRating:  ' + parsedData['items'][b].volumeInfo.averageRating + '\n')
                             */
                         }
@@ -106,7 +108,6 @@ function runGbook(data) {
     console.log('Total books comapred ' + data);
 
     console.log('5 Cheapest per Page ');
-
     console.log(cheapest5.map(book => {
 
         return '{   title: <' + book.volumeInfo.title + '>,' +
